@@ -1,0 +1,30 @@
+{
+    "name": "treehouselabs/newrelic-api",
+    "description": "A PHP library for using the Newrelic REST API v2",
+    "type": "library",
+    "require": {
+        "php": ">=7.0",
+        "ext-simplexml": "*",
+        "guzzlehttp/guzzle": "^6.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "TreeHouse\\NewRelicApi\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TreeHouse\\NewRelicApi\\Test\\": "tests/"
+        }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jan Dorsman",
+            "email": "jan@treehouse.nl"
+        }
+    ]
+}
