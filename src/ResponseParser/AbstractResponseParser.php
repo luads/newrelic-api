@@ -24,15 +24,17 @@ abstract class AbstractResponseParser implements ResponseParserInterface
             'last' => ['url' => null, 'pagenumber' => null]
         ];
 
-        foreach (explode(',', reset($linkHeader)) as $link) {
-            // Dissect the header value
-            preg_match('/<(?P<url>[^>]+)>;\srel="(?P<rel>[a-z]+)"/', $link, $matches);
+        if (!empty($linkHeader)) {
+            foreach (explode(',', reset($linkHeader)) as $link) {
+                // Dissect the header value
+                preg_match('/<(?P<url>[^>]+)>;\srel="(?P<rel>[a-z]+)"/', $link, $matches);
 
-            // Check if we want to save this value
-            if (array_key_exists('rel', $matches) && in_array($matches['rel'], array_keys($pages))) {
-                $pages[$matches['rel']]['url'] = $matches['url'];
-                parse_str(parse_url($matches['url'])['query'], $query);
-                $pages[$matches['rel']]['pagenumber'] = (int) $query['page'];
+                // Check if we want to save this value
+                if (array_key_exists('rel', $matches) && in_array($matches['rel'], array_keys($pages))) {
+                    $pages[$matches['rel']]['url'] = $matches['url'];
+                    parse_str(parse_url($matches['url'])['query'], $query);
+                    $pages[$matches['rel']]['pagenumber'] = (int)$query['page'];
+                }
             }
         }
 

@@ -32,6 +32,28 @@ class XmlResponseParserTest extends TestCase
         $this->assertSame(20, $pages['last']['pagenumber']);
     }
 
+    public function testGetPagesWithEmptyResponse()
+    {
+        $responseParser = new XmlResponseParser();
+        $noPages = $responseParser->getPages($this->mockEmptyResponse());
+
+        // Test first page
+        $this->assertNull($noPages['first']['url']);
+        $this->assertNull($noPages['first']['pagenumber']);
+
+        // Test previous page
+        $this->assertNull($noPages['prev']['url']);
+        $this->assertNull($noPages['prev']['pagenumber']);
+
+        // Test next page
+        $this->assertNull($noPages['next']['url']);
+        $this->assertNull($noPages['next']['pagenumber']);
+
+        // Test last page
+        $this->assertNull($noPages['last']['url']);
+        $this->assertNull($noPages['last']['pagenumber']);
+    }
+
     public function testHasNextPage()
     {
         $responseParser = new XmlResponseParser();
@@ -53,6 +75,17 @@ class XmlResponseParserTest extends TestCase
 
         $mock = $this->createMock(Response::class);
         $mock->method('getHeader')->with('Link')->willReturn($linkHeader);
+
+        return $mock;
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|Response
+     */
+    private function mockEmptyResponse()
+    {
+        $mock = $this->createMock(Response::class);
+        $mock->method('getHeader')->with('Link')->willReturn([]);
 
         return $mock;
     }
