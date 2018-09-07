@@ -89,12 +89,13 @@ class ApiClient
      *                        Do not include the .json or .xml suffix, use setFormat to change the format instead.
      * @param string $method  The HTTP method to use (GET, POST, PUT, DELETE)
      * @param array  $headers Any additional headers to send with the request.
+     * @param array  $json    JSON data to send with POST or PUT requests
      *
      * @throws ApiException
      *
      * @return ResponseInterface
      */
-    public function request(string $uri, string $method = 'GET', array $headers = []) : ResponseInterface
+    public function request(string $uri, string $method = 'GET', array $headers = [], array $json = []) : ResponseInterface
     {
         if (!$this->isValidUri($uri)) {
             throw new \InvalidArgumentException(sprintf(
@@ -108,8 +109,16 @@ class ApiClient
         $headers = array_merge($headers, ['X-Api-Key' => $this->apiKey]);
         $filters = !empty($this->filters) ? http_build_query($this->filters) : null;
         $url = sprintf('%s%s.%s?%s', self::API_URL, $uri, $this->format, $filters);
+        
+        $options = ['headers' => $headers];
+        
+        if (!empty($json)) {
+            $options['json'] = $json;
+        }
+        
+        $url = sprintf('%s%s.%s?%s', self::API_URL, $uri, $this->format, $filters);
 
-        $response = $this->client->request($method, $url, ['headers' => $headers]);
+        $response = $this->client->request($method, $url, $options);
         $this->errorHandler->handle($response);
 
         return $response;
